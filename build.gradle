@@ -5,6 +5,7 @@ configure(allprojects) {
     apply plugin: "idea"
     apply plugin: "eclipse"
     apply plugin: "jetty"
+    apply plugin: "maven-publish"
 
     group = "com.ryonday.marvel"
 
@@ -117,6 +118,34 @@ project("marvel-impl") {
                 "org.glassfish.jersey.core:jersey-client:$ver_jersey"
 
         compile "com.google.inject:guice:$ver_guice"
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "marvel-api",
+                "Specification-Vendor"    : "Mysticpasta1",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "Mysticpasta1",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
     }
 }
 
